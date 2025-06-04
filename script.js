@@ -20,7 +20,17 @@ function appendTopDisplay(value){
         display.value = value;
     } else if (CurrentValue === '0' && value ==='.') {
         display.value = CurrentValue + value;
-    } else {
+    } 
+    else if(value ==='.') {
+        // Get the last number in the display //
+        let lastNumber = CurrentValue.spli('/[+\-*/').pop();
+        // Only add the decimal if the current number doesnt have ont//
+        if (lastNumber.includes('.')){
+            display.value = CurrentValue + value
+        }
+
+    }
+    else {
         display.value = CurrentValue + value;
     }
 
@@ -34,7 +44,15 @@ function appendTopDisplay(value){
 function clearDisplay() {
     console.log('Clear button pressed.');
 
-    alert('Clear button was clicked');
+    display.value = '0';
+    justCalculated = false;
+
+    display.style.backgroundColor = '#f0f0f0';
+    setTimeout(()=> {
+        display.style.backgroundColor ='' ;
+    },150);
+
+   
 }
 
 function deleteLate() {
@@ -49,8 +67,6 @@ function deleteLate() {
      else{
         display.value = CurrentValue.slice(0,-1);
      }
-
-    alert('Backspace button was clicked');
 }
 
 function justCalculated() {
@@ -58,6 +74,41 @@ function justCalculated() {
 
     alert('Equals button was clicked');
 }
+
+document.addEventListener('keydown',function(event) {
+    console.log ('Key pressed', event.key);
+
+    if (event.key >= '0' && event.key <= '9') {
+        appendTopDisplay(event.key)
+    }
+    else if (event.key =='.'){
+        appendTopDisplay('.');
+    }
+    else if (event.key == '+'){
+        appendTopDisplay('+');
+    }
+    else if (event.key ==='-'){
+        appendTopDisplay('-');
+    }
+    else if (event.key === '*'){
+        appendTopDisplay('*');
+    }
+    else if (event.key ==='/'){
+        event.preventDefault();
+        appendTopDisplay('/')
+    }
+    
+    else if (event.key == 'Enter'|| event.key ==='=') {
+        calculate();
+    }
+    else if (event.key === 'Enscape'|| event.key === 'c'|| event.key ==='c') {
+        clearDisplay();
+    }
+    else if (event.key ==='Backspace') {
+        deleteLate();
+    }
+
+})
 
 document.addEventListener('DOMContentLoaded',function() {
     console.log('Calculateor loaded successfully');
