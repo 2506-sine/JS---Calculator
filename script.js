@@ -4,6 +4,14 @@ const display = document.getElementById('display');
 // Track if we have performed a calculation //
 let justCalculated = false;
 
+function isOperator(char) {
+    return ['+','-','*','/'] .includes(char);
+}
+
+function getLastChar() {
+    return display.value.slice(-1);
+}
+
 function appendTopDisplay(value){
     console.log('Button pressed:',value);
 
@@ -14,6 +22,38 @@ function appendTopDisplay(value){
         justCalculated = false;
         return;
     }
+
+  if (justCalculated && isOperator(value)) {
+       display.value = CurrentValue + value;
+       justCalculated = false;
+       return;
+  } 
+
+  // Handles operators //
+    if (isOperator(value)) {
+        // Dont  allow operator as first char (exception for minus)
+        if (CurrentValue === '0' && value !== '-') {
+            return; // Do nothing 
+        }
+    }
+
+    // If the last character is already an operator, replace it 
+    if (isOperator(getLastChar())) {
+        display.value = CurrentValue.slice(0,-1) + value;
+    } else if (!isNaN(value)) {
+        if (CurrentValue === '0') {
+            display.value = value;
+        } else {
+            display.value = CurrentValue + value;
+        }
+    } else if (CurrentValue ==='0' && value === '.'){
+        display.value = CurrentValue + value;
+    } else {
+        display.value = CurrentValue + value;
+    }
+
+    
+
 
     // If current display show 0 and user enters a number , we wanna replace the 0
     if (CurrentValue === "0" && !isNaN(value)) {
